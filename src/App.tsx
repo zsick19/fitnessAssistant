@@ -13,6 +13,7 @@ import FitnessContributorHomePage from './dashContributorPages/Fitness/FitnessCo
 import NutritionContributorHomePage from './dashContributorPages/Nutrition/NutritionContributorHomePage/NutritionContributorHomePage'
 import NutritionAdminHomePage from './dashAdminPages/Nutrition/NutritionAdminHomePage/NutritionAdminHomePage'
 import NutritionHomePage from './dashUserPages/Nutrition/NutritionHomePage/NutritionHomePage'
+import FoodMealCreatePage from './dashAdminPages/Nutrition/FoodMealCreatePage/FoodMealCreatePage'
 
 
 function App() {
@@ -32,10 +33,15 @@ function App() {
           <Route index element={<NutritionHomePage />}>
             {/* User Nutrition Routes */}
           </Route>
-          <Route path='contributor' element={<PrivateRoute requiredRole='NutritionContributor'><NutritionContributorHomePage /></PrivateRoute>}>
+
+          <Route path='contributor' element={<PrivateRoute requiredRole={['NutritionContributor', 'NutritionAdmin']} />}>
+            <Route index element={<NutritionContributorHomePage />} />
+            <Route path='foodMeal/create' element={<FoodMealCreatePage />} />
             {/* Contributor Nutrition Routes */}
           </Route>
-          <Route path='admin' element={<PrivateRoute requiredRole='NutritionAdmin'><NutritionAdminHomePage /></PrivateRoute>}>
+
+          <Route path='admin' element={<PrivateRoute requiredRole={['NutritionAdmin']} />}>
+            <Route index element={<NutritionAdminHomePage />} />
             {/* Admin Nutrition Routes */}
           </Route>
         </Route>
@@ -44,10 +50,14 @@ function App() {
           <Route index element={<div>User Fitness library</div>}>
             {/* User fitness Routes */}
           </Route>
-          <Route path='contributor' element={<PrivateRoute requiredRole='FitnessContributor'><FitnessContributorHomePage /></PrivateRoute>}>
+          <Route path='contributor' element={<PrivateRoute requiredRole={['FitnessContributor', 'FitnessAdmin']} />}>
+            <Route index element={<FitnessContributorHomePage />} />
             {/* Contributor Fitness Routes */}
           </Route>
-          <Route path='admin' element={<PrivateRoute requiredRole='FitnessAdmin'><FitnessAdminHomePage /></PrivateRoute>}>
+
+
+          <Route path='admin' element={<PrivateRoute requiredRole={['FitnessAdmin']} />}>
+            <Route index element={<FitnessAdminHomePage />} />
             {/* Admin Fitness Routes */}
           </Route>
         </Route>

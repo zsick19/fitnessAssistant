@@ -10,6 +10,7 @@ function DashLayout() {
   if (!initialized) { return <div>Loading Authentication...</div> }
   if (!keycloak.authenticated) return <Navigate to={'/login'} replace state={{ from: location.pathname }} />
 
+
   return (
     <>
       {<DashNav />}

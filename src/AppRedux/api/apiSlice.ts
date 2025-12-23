@@ -2,7 +2,7 @@ import { createApi, fetchBaseQuery } from "@reduxjs/toolkit/query/react";
 import {keycloak} from '../../auth/keyCloak'
 
 const rawBaseQuery=fetchBaseQuery({
-    baseUrl:'http://localhost:5209',
+    baseUrl: import.meta.env.VITE_BACKEND_API_URL,
     prepareHeaders:(headers,{getState})=>{
         if(keycloak.authenticated && keycloak.token){
             headers.set('Authorization', `Bearer ${keycloak.token}`)

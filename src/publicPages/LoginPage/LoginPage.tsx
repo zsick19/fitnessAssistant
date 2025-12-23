@@ -9,8 +9,6 @@ function LoginPage() {
     keycloak.login({ redirectUri: "http://localhost:5173/dash" })
   }
   useEffect(() => {
-
-
     keycloak.init({ onLoad: 'login-required' }).then((auth) => {
       if (auth) {
         keycloak.loadUserProfile().then((profile) => {
@@ -23,7 +21,7 @@ function LoginPage() {
 
 
   return (
-    <div>LoginPage
+    <div>
       <button onClick={() => handleKeycloakLogin()}>Login</button>
 
     </div>
