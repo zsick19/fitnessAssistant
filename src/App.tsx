@@ -15,6 +15,7 @@ import NutritionAdminHomePage from './dashAdminPages/Nutrition/NutritionAdminHom
 import NutritionHomePage from './dashUserPages/Nutrition/NutritionHomePage/NutritionHomePage'
 import FoodMealCreatePage from './dashContributorPages/Nutrition/FoodMealCreatePage/FoodMealCreatePage'
 import FoodMealEditPage from './dashContributorPages/Nutrition/FoodMealEditPage/FoodMealEditPage'
+import Prefetch from './features/Prefetch'
 
 
 function App() {
@@ -28,46 +29,50 @@ function App() {
       </Route>
 
       <Route path='/dash' element={<DashLayout />}>
-        <Route index element={<HomePage />} />
+        <Route element={<Prefetch />}>
+          <Route index element={<HomePage />} />
 
-        <Route path='nutrition'>
-          <Route index element={<NutritionHomePage />}>
-            {/* User Nutrition Routes */}
+          <Route path='nutrition'>
+            <Route index element={<NutritionHomePage />}>
+              {/* User Nutrition Routes */}
+            </Route>
+
+            <Route path='contributor' element={<PrivateRoute requiredRole={['NutritionContributor', 'NutritionAdmin']} />}>
+              <Route index element={<NutritionContributorHomePage />} />
+              <Route path='foodMeal/create' element={<FoodMealCreatePage />} />
+              <Route path='foodMeal/:id/edit' element={<FoodMealEditPage />} />
+              {/* Contributor Nutrition Routes */}
+            </Route>
+
+            <Route path='admin' element={<PrivateRoute requiredRole={['NutritionAdmin']} />}>
+              <Route index element={<NutritionAdminHomePage />} />
+              {/* Admin Nutrition Routes */}
+            </Route>
           </Route>
 
-          <Route path='contributor' element={<PrivateRoute requiredRole={['NutritionContributor', 'NutritionAdmin']} />}>
-            <Route index element={<NutritionContributorHomePage />} />
-            <Route path='foodMeal/create' element={<FoodMealCreatePage />} />
-            <Route path='foodMeal/:id/edit' element={<FoodMealEditPage />} />
-            {/* Contributor Nutrition Routes */}
-          </Route>
-
-          <Route path='admin' element={<PrivateRoute requiredRole={['NutritionAdmin']} />}>
-            <Route index element={<NutritionAdminHomePage />} />
-            {/* Admin Nutrition Routes */}
-          </Route>
-        </Route>
-
-        <Route path='fitness'>
-          <Route index element={<div>User Fitness library</div>}>
-            {/* User fitness Routes */}
-          </Route>
-          <Route path='contributor' element={<PrivateRoute requiredRole={['FitnessContributor', 'FitnessAdmin']} />}>
-            <Route index element={<FitnessContributorHomePage />} />
-            {/* Contributor Fitness Routes */}
-          </Route>
+          <Route path='fitness'>
+            <Route index element={<div>User Fitness library</div>}>
+              {/* User fitness Routes */}
+            </Route>
+            <Route path='contributor' element={<PrivateRoute requiredRole={['FitnessContributor', 'FitnessAdmin']} />}>
+              <Route index element={<FitnessContributorHomePage />} />
+              {/* Contributor Fitness Routes */}
+            </Route>
 
 
-          <Route path='admin' element={<PrivateRoute requiredRole={['FitnessAdmin']} />}>
-            <Route index element={<FitnessAdminHomePage />} />
-            {/* Admin Fitness Routes */}
+            <Route path='admin' element={<PrivateRoute requiredRole={['FitnessAdmin']} />}>
+              <Route index element={<FitnessAdminHomePage />} />
+              {/* Admin Fitness Routes */}
+            </Route>
           </Route>
-        </Route>
 
-        <Route path='commitment'>
+          <Route path='commitment'>
+
+          </Route>
 
         </Route>
       </Route>
+
 
       <Route path='accessDenied' element={<AccessDeniedPage />} />
     </Routes>

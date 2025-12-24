@@ -1,10 +1,8 @@
 import { useKeycloak } from '@react-keycloak/web'
-import React from 'react'
 import { Link } from 'react-router-dom'
 import './PublicNavStyles.css'
 
 function PublicNav() {
-
   const { keycloak } = useKeycloak();
 
   return (

@@ -17,5 +17,4 @@ export const store = configureStore({
     devTools: true
 })
 
-export const RootState = store.getState()
 setupListeners(store.dispatch)

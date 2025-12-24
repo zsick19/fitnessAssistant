@@ -4,6 +4,7 @@ import type { singleIngredient, usedIngredient } from "../FoodMealEditPage";
 import { useGetAllRawIngredientsQuery } from "../../../../features/RawIngredients/rawIngredientsSliceApi";
 import { PaginationInfo } from "../../../../models/PaginationInfo";
 import Pagination from "../../../../components/Pagination";
+import { useGetAllFoodGroupsQuery } from "../../../../features/FoodGroups/foodGroupSliceApi";
 
 
 
@@ -27,6 +28,29 @@ function SelectIngredientsStage({ mealIngredients, handleAddingIngredient, handl
     const [searchParams, setSearchParams] = useState<string | undefined>(undefined)
     const [searchCategory, setSearchCategory] = useState<string | undefined>(undefined)
     const resultsPerPage = 5
+
+
+
+
+    const { data: FoodGroupData, isSuccess: isFoodGroupSuccess } = useGetAllFoodGroupsQuery(undefined);
+
+    let foodGroupSelectOptions;
+    if (isFoodGroupSuccess) {
+        foodGroupSelectOptions = FoodGroupData.foodGroups.map((foodGroup) => {
+            return (
+                <>
+                    <input type="radio" name="ingredientCategory" id={foodGroup.name} value={foodGroup.id} />
+                    <label htmlFor={foodGroup.name}>{foodGroup.name}</label>
+                </>
+            )
+        })
+    }
+
+
+
+    
+
+
 
 
     const { data, isSuccess, isError, isLoading } = useGetAllRawIngredientsQuery({
@@ -91,23 +115,9 @@ function SelectIngredientsStage({ mealIngredients, handleAddingIngredient, handl
                         <legend>Filter By Category</legend>
                         <input type="radio" name="ingredientCategory" id="allCategories" value="allCategories" />
                         <label htmlFor="allCategories">All</label>
-                        <input type="radio" name="ingredientCategory" id="dairy" value="5D6E08CF-2AE0-4ACA-B073-26C81527088B" />
-                        <label htmlFor="dairy">Dairy</label>
-                        <input type="radio" name="ingredientCategory" id="Protein Sources" value="B0E865ED-ADFD-4DF8-9DFE-DF5D8B19822E" />
-                        <label htmlFor="Protein Sources">Protein Sources</label>
-                        <input type="radio" name="ingredientCategory" id="fruits" value="8D72E115-DFF0-4FE2-9468-A6A943134526" />
-                        <label htmlFor="fruits">Fruits</label>
-                        <input type="radio" name="ingredientCategory" id="vegetable" value="6F5EDE71-D49B-4438-8676-8DD3B95D7E93" />
-                        <label htmlFor="vegetable">Vegetable</label>
-                        <input type="radio" name="ingredientCategory" id="spices" value="0FC942D2-D674-48FE-9866-A796F2225A54" />
-                        <label htmlFor="spices">Spices</label>
-                        <input type="radio" name="ingredientCategory" id="fatOil" value="6EF090BF-4FE0-4D08-864C-2389E7DF043C" />
-                        <label htmlFor="fatOil">Fats & Oils</label>
-                        <input type="radio" name="ingredientCategory" id="grains" value="CD25BBC3-F650-4C6D-9069-997E3599CB8E" />
-                        <label htmlFor="grains">Grains</label>
-                        <input type="radio" name="ingredientCategory" id="sugars" value="EA948763-EC16-47A2-A5BC-0426D81C4125" />
-                        <label htmlFor="sugars">Sugar</label>
+                        {foodGroupSelectOptions}
                     </fieldset>
+
                     <div>
                         <input type="text" placeholder="Search" onChange={handleSearchTermChange} />
                         <button>Search</button>
