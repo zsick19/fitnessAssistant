@@ -13,7 +13,8 @@ import FitnessContributorHomePage from './dashContributorPages/Fitness/FitnessCo
 import NutritionContributorHomePage from './dashContributorPages/Nutrition/NutritionContributorHomePage/NutritionContributorHomePage'
 import NutritionAdminHomePage from './dashAdminPages/Nutrition/NutritionAdminHomePage/NutritionAdminHomePage'
 import NutritionHomePage from './dashUserPages/Nutrition/NutritionHomePage/NutritionHomePage'
-import FoodMealCreatePage from './dashAdminPages/Nutrition/FoodMealCreatePage/FoodMealCreatePage'
+import FoodMealCreatePage from './dashContributorPages/Nutrition/FoodMealCreatePage/FoodMealCreatePage'
+import FoodMealEditPage from './dashContributorPages/Nutrition/FoodMealEditPage/FoodMealEditPage'
 
 
 function App() {
@@ -37,6 +38,7 @@ function App() {
           <Route path='contributor' element={<PrivateRoute requiredRole={['NutritionContributor', 'NutritionAdmin']} />}>
             <Route index element={<NutritionContributorHomePage />} />
             <Route path='foodMeal/create' element={<FoodMealCreatePage />} />
+            <Route path='foodMeal/:id/edit' element={<FoodMealEditPage />} />
             {/* Contributor Nutrition Routes */}
           </Route>
 

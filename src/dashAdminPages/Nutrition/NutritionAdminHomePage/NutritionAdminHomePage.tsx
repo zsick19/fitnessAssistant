@@ -1,8 +1,8 @@
 import React, { useEffect, useState } from 'react'
-import { useConnectionTestQuery } from '../../../features/test/testSliceApi'
 import { PaginationInfo } from '../../../models/PaginationInfo';
 import Pagination from '../../../components/Pagination';
 import { Link, useSearchParams } from 'react-router-dom';
+import { useGetAllFoodMealsQuery } from '../../../features/FoodMeals/foodMealSliceApi';
 
 function NutritionAdminHomePage() {
     const [searchParams, setSearchParams] = useSearchParams();
@@ -10,16 +10,21 @@ function NutritionAdminHomePage() {
     const [currentPage, setCurrentPage] = useState<number>(1)
     const [resultsPerPage, setResultsPerPage] = useState<number>(5)
     const [errorMessage, setErrorMessage] = useState<string>('');
+    const [showOnlyUsersMeals, setShowOnlyUsersMeals] = useState<boolean>(false)
 
     const [paginationInfo, setPaginationInfo] = useState<PaginationInfo | null>(null);
 
 
 
-    const { data, error, isSuccess, isLoading, isError, refetch } = useConnectionTestQuery({ pageNumber: currentPage, pageSize: resultsPerPage, searchMealName: searchParams.get('name') || undefined })
+    const { data, error, isSuccess, isLoading, isError, refetch } = useGetAllFoodMealsQuery({
+        pageNumber: currentPage, pageSize: resultsPerPage,
+        searchByGuid: showOnlyUsersMeals,
+        searchMealName: searchParams.get('name') || undefined
+    })
 
 
     let testResults;
-    if (isSuccess && data.data.length > 0) { testResults = data.data.map((summary) => { return (<div id={summary.Id}>{summary.name}</div>) }) }
+    if (isSuccess && data.data.length > 0) { testResults = data.data.map((summary: any) => { return (<div id={summary.Id}>{summary.name}</div>) }) }
     else if (isSuccess) { testResults = <div>No results</div> }
     else if (isLoading) { testResults = <div>Is Loading</div> }
     else if (isError) {
@@ -70,7 +75,7 @@ function NutritionAdminHomePage() {
 
             <div className='flex'>
                 <form onSubmit={handleSearch}>
-                    <input type="search" value={nameSearch || ''} onChange={(e) => handleSearchTermChange(e)} placeholder="Meal Search" aria-label="search" />
+                    <input type="search" value={nameSearch} onChange={(e) => handleSearchTermChange(e)} placeholder="Meal Search" aria-label="search" />
                     <button type="submit">Search</button>
                 </form>
                 <form>
@@ -83,6 +88,7 @@ function NutritionAdminHomePage() {
                 </form>
             </div>
 
+            <button onClick={() => setShowOnlyUsersMeals(prev => !prev)}>{showOnlyUsersMeals ? 'Show All' : 'Show only users'}</button>
             {isError ?
                 <div>
                     {errorMessage}
@@ -94,7 +100,7 @@ function NutritionAdminHomePage() {
                 </div>
             }
 
-            {paginationInfo && <Pagination paginationInfo={paginationInfo} onPageChange={setCurrentPage} />}
+            {paginationInfo && <Pagination paginationInfo={paginationInfo} onPageChange={setCurrentPage} navigationNeeded={true} />}
         </div>
     )
 }

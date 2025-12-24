@@ -3,10 +3,11 @@ import type { PaginationInfo } from "../models/PaginationInfo";
 
 interface PaginationProps {
     paginationInfo: PaginationInfo,
-    onPageChange: (pageNumber: number) => void
+    navigationNeeded: boolean,
+    onPageChange: (pageNumber: number) => void,
 }
 
-const Pagination: React.FC<PaginationProps> = ({ paginationInfo, onPageChange }) => {
+const Pagination: React.FC<PaginationProps> = ({ paginationInfo, onPageChange, navigationNeeded }) => {
     const navigate = useNavigate();
     const getPageNumbers = (paginationInfo: PaginationInfo) => {
         const pageNumbers = []
@@ -18,8 +19,9 @@ const Pagination: React.FC<PaginationProps> = ({ paginationInfo, onPageChange })
 
     const handlePageChange = (pageNumber: number) => {
         onPageChange(pageNumber);
-        navigate(`?page=${pageNumber}`)
+        if (navigationNeeded) navigate(`?page=${pageNumber}`)
     }
+
 
     return (
         <nav>
