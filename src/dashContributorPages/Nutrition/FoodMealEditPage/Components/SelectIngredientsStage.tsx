@@ -4,7 +4,9 @@ import type { singleIngredient, usedIngredient } from "../FoodMealEditPage";
 import { useGetAllRawIngredientsQuery } from "../../../../features/RawIngredients/rawIngredientsSliceApi";
 import { PaginationInfo } from "../../../../models/PaginationInfo";
 import Pagination from "../../../../components/Pagination";
-import { useGetAllFoodGroupsQuery } from "../../../../features/FoodGroups/foodGroupSliceApi";
+import { useSelector } from "react-redux";
+import { selectFoodGroups } from "../../../../features/Initializations/InitializationSliceApi";
+import { manualRefetchOfInitializedData } from "../../../../features/Prefetch";
 
 
 
@@ -30,13 +32,10 @@ function SelectIngredientsStage({ mealIngredients, handleAddingIngredient, handl
     const resultsPerPage = 5
 
 
-
-
-    const { data: FoodGroupData, isSuccess: isFoodGroupSuccess } = useGetAllFoodGroupsQuery(undefined);
-
     let foodGroupSelectOptions;
+    const { foodGroups, isSuccess: isFoodGroupSuccess, isError: isFoodGroupError } = useSelector(selectFoodGroups)
     if (isFoodGroupSuccess) {
-        foodGroupSelectOptions = FoodGroupData.foodGroups.map((foodGroup) => {
+        foodGroupSelectOptions = foodGroups.map((foodGroup) => {
             return (
                 <>
                     <input type="radio" name="ingredientCategory" id={foodGroup.name} value={foodGroup.id} />
@@ -46,23 +45,10 @@ function SelectIngredientsStage({ mealIngredients, handleAddingIngredient, handl
         })
     }
 
-
-
-    
-
-
-
-
-    const { data, isSuccess, isError, isLoading } = useGetAllRawIngredientsQuery({
-        pageNumber: currentPage,
-        pageSize: resultsPerPage,
-        searchName: searchParams,
-        searchCategory: searchCategory
-    })
-
-    let searchResult;
+    let rawIngredientSearchResults;
+    const { data, isSuccess, isError, isLoading } = useGetAllRawIngredientsQuery({ pageNumber: currentPage, pageSize: resultsPerPage, searchName: searchParams, searchCategory: searchCategory })
     if (isSuccess && data.rawIngredients.length > 0) {
-        searchResult = data.rawIngredients.map((rawIngredient) => {
+        rawIngredientSearchResults = data.rawIngredients.map((rawIngredient) => {
             return (
                 <div className="rawIngredientCard" key={rawIngredient.id} onClick={() => setSelectedIngredient(rawIngredient)} >
                     <p>{rawIngredient.foodGroup}</p>
@@ -73,12 +59,11 @@ function SelectIngredientsStage({ mealIngredients, handleAddingIngredient, handl
             )
         })
     }
-    else if (isSuccess) { searchResult = <div>No matching results</div> }
-    else if (isLoading) { searchResult = <div>Loading...</div> }
-    else if (isError) { searchResult = <div>Error loading results</div> }
-    else {
-        searchResult = undefined
-    }
+    else if (isSuccess) { rawIngredientSearchResults = <div>No matching results</div> }
+    else if (isLoading) { rawIngredientSearchResults = <div>Loading...</div> }
+    else if (isError) { rawIngredientSearchResults = <div>Error loading results</div> }
+
+
 
     useEffect(() => {
         if (isSuccess) {
@@ -111,12 +96,14 @@ function SelectIngredientsStage({ mealIngredients, handleAddingIngredient, handl
             <h2>SelectIngredientsStage</h2>
             <div>
                 <form className="flex" onSubmit={handleSearch}>
-                    <fieldset onChange={handleCategorySearchChange}>
-                        <legend>Filter By Category</legend>
-                        <input type="radio" name="ingredientCategory" id="allCategories" value="allCategories" />
-                        <label htmlFor="allCategories">All</label>
-                        {foodGroupSelectOptions}
-                    </fieldset>
+                    {isFoodGroupError ? <div><button onClick={() => manualRefetchOfInitializedData()}>Refetch Initialized Data</button></div> :
+                        <fieldset onChange={handleCategorySearchChange}>
+                            <legend>Filter By Category</legend>
+                            <input type="radio" name="ingredientCategory" id="allCategories" value="allCategories" />
+                            <label htmlFor="allCategories">All</label>
+                            {foodGroupSelectOptions}
+                        </fieldset>
+                    }
 
                     <div>
                         <input type="text" placeholder="Search" onChange={handleSearchTermChange} />
@@ -127,7 +114,7 @@ function SelectIngredientsStage({ mealIngredients, handleAddingIngredient, handl
 
                 <div>
                     <div className="flex">
-                        {searchResult}
+                        {rawIngredientSearchResults}
                     </div>
                     {paginationInfo && <Pagination paginationInfo={paginationInfo} onPageChange={setCurrentPage} navigationNeeded={false} />}
                 </div>

@@ -29,8 +29,9 @@ function App() {
       </Route>
 
       <Route path='/dash' element={<DashLayout />}>
-        <Route element={<Prefetch />}>
+        <Route element={<Prefetch />}>        
           <Route index element={<HomePage />} />
+
 
           <Route path='nutrition'>
             <Route index element={<NutritionHomePage />}>
