@@ -72,8 +72,9 @@ function FoodMealEditPage() {
     async function handleSaveProgress() {
         if (id != undefined) {
             try {
-                const patch = jsonpatch.compare(data, editFormData)
+                const patch = jsonpatch.compare(data, { ...editFormData, mostRecentMealCreationStage: editFoodMealStage })
                 if (patch.length > 0) await updateFoodMeal({ id, patchData: patch }).unwrap()
+
                 setEditSavedMessage("Saved")
                 setTimeout(() => {
                     setEditSavedMessage(undefined)
