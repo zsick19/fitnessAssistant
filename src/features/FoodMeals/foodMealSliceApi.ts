@@ -1,6 +1,5 @@
 import { apiSlice } from "../../AppRedux/api/apiSlice";
 
-
 export interface FoodMealSummary{
     Id:string,
     name:string,
@@ -11,8 +10,6 @@ interface FoodMealSummaryResponse{
     totalPages:number,
     data:FoodMealSummary[]
 }
-
-
 interface FoodMealCreatedResponse{
     id:string,
     name:string,
@@ -20,8 +17,6 @@ interface FoodMealCreatedResponse{
     mealCategoryId:string,
     submittedPhotos:string[]
 }
-
-
 export interface FoodMealSummaryRequestMain{
     pageNumber:Number,
     pageSize:Number,
@@ -29,6 +24,10 @@ export interface FoodMealSummaryRequestMain{
     searchByGuid:boolean|undefined
 }
 
+interface FoodMealUpdateRequest{
+    id:string,
+    patchData:any,    
+}
 
 
 export const foodMealApiSlice = apiSlice.injectEndpoints({
@@ -58,6 +57,18 @@ export const foodMealApiSlice = apiSlice.injectEndpoints({
                 method:'POST',
                 body:args
             })
+        }),
+        updateFoodMeal:builder.mutation<void,FoodMealUpdateRequest>({
+            query:({id,patchData})=>{
+                const formData=new FormData()
+                formData.append('patchDoc',JSON.stringify(patchData))
+                // if (file) formData.append('avatar', file);
+            return{
+                url:`/nutrition/foodMeal/${id}`,
+                method:'PATCH',
+                body:formData
+                }
+            }
         })  
     })
 })
@@ -65,5 +76,6 @@ export const foodMealApiSlice = apiSlice.injectEndpoints({
 export const {
     useGetAllFoodMealsQuery,
     useGetSelectFoodMealQuery,
-    useCreateFoodMealMutation
+    useCreateFoodMealMutation,
+    useUpdateFoodMealMutation
    } = foodMealApiSlice

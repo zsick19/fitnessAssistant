@@ -2,9 +2,8 @@ import React, { useEffect, useState } from 'react'
 import { useNavigate } from 'react-router-dom';
 import { useCreateFoodMealMutation } from '../../../features/FoodMeals/foodMealSliceApi';
 import { isEmptyOrWhitespace } from '../../../services/HelperFunc';
-import { useDispatch, useSelector } from 'react-redux';
-import { InitializationApiSlice, selectFoodGroups, selectMealCategories } from '../../../features/Initializations/InitializationSliceApi';
-import { store } from '../../../AppRedux/store';
+import { useSelector } from 'react-redux';
+import { selectMealCategories } from '../../../features/Initializations/InitializationSliceApi';
 import { manualRefetchOfInitializedData } from '../../../features/Prefetch';
 
 function FoodMealCreatePage() {

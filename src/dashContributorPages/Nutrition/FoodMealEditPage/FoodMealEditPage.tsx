@@ -1,18 +1,20 @@
 import React, { useEffect, useState } from 'react'
 import { useParams } from 'react-router-dom'
-import { useGetSelectFoodMealQuery } from '../../../features/FoodMeals/foodMealSliceApi';
+import { useGetSelectFoodMealQuery, useUpdateFoodMealMutation } from '../../../features/FoodMeals/foodMealSliceApi';
 import { PaginationInfo } from '../../../models/PaginationInfo';
 import Pagination from '../../../components/Pagination';
 import ConfirmInitialDetailsStage from './Components/ConfirmInitialDetailsStage';
 import SelectIngredientsStage from './Components/SelectIngredientsStage';
 import './FoodMealEditPage.css'
 
+import * as jsonpatch from 'fast-json-patch';
+import { applyOperation } from 'fast-json-patch';
 interface editFoodMealSubmission {
     id: string | undefined,
     name: string | undefined,
     description: string | undefined
     mealIngredients: usedIngredient[]
-    lastSavedPosition: number | undefined
+    mostRecentMealCreationStage: number | undefined
 }
 
 export interface usedIngredient {
@@ -21,44 +23,36 @@ export interface usedIngredient {
     quantityUsed: number | undefined
     measuringMethod: string | undefined
 }
-
-
-
-
 export interface singleIngredient {
     id: string,
     name: string
 }
 
 
-function FoodMealEditPage() {
 
+function FoodMealEditPage() {
     const { id } = useParams();
     const [editFoodMealStage, setEditFoodMealStage] = useState<number>(1)
-    const [editFormData, setEditFormData] = useState<editFoodMealSubmission>({ id: undefined, name: undefined, description: undefined, mealIngredients: [], lastSavedPosition: undefined })
+    const [editSavedMessage, setEditSavedMessage] = useState<string | undefined>(undefined);
+    const [editFormData, setEditFormData] = useState<editFoodMealSubmission>({ id: undefined, name: undefined, description: undefined, mealIngredients: [], mostRecentMealCreationStage: undefined })
 
     const { data, isError, isSuccess, error, isLoading } = useGetSelectFoodMealQuery({ id })
+    const [updateFoodMeal] = useUpdateFoodMealMutation()
 
 
     useEffect(() => {
         if (isSuccess) {
-            let copyData: editFoodMealSubmission = { ...data }
-            copyData.lastSavedPosition = 2
-            copyData.mealIngredients = [{ id: 'eed38', name: 'steak', quantityUsed: 8, measuringMethod: 'ounces' }]
             setEditFormData(data)
-
-            setEditFoodMealStage(copyData.lastSavedPosition)
+            setEditFoodMealStage(data.mostRecentMealCreationStage)
         }
-
     }, [data])
 
 
-    const provideCurrentStage = () => {
+    function provideCurrentStage() {
         if (editFoodMealStage == 1) return <ConfirmInitialDetailsStage handleFormDataChange={handleFormDataChange} name={editFormData?.name} description={editFormData?.description} />
         else if (editFoodMealStage == 2) return <SelectIngredientsStage mealIngredients={editFormData.mealIngredients} handleAddingIngredient={handleAddingIngredient} handleRemovingIngredient={handleRemovingIngredient} />
         else if (editFoodMealStage == 3) return <div>stage 3</div>
     }
-
 
     function handleFormDataChange(event: React.ChangeEvent<HTMLSelectElement | HTMLInputElement | HTMLTextAreaElement>): void {
         const { name, value } = event.target;
@@ -75,25 +69,34 @@ function FoodMealEditPage() {
         setEditFormData({ ...editFormData, mealIngredients: ingredientsPostRemoval })
     }
 
-    function handleSaveProgress() {
-        console.log(editFormData)
+    async function handleSaveProgress() {
+        if (id != undefined) {
+            try {
+                const patch = jsonpatch.compare(data, editFormData)
+                if (patch.length > 0) await updateFoodMeal({ id, patchData: patch }).unwrap()
+                setEditSavedMessage("Saved")
+                setTimeout(() => {
+                    setEditSavedMessage(undefined)
+                }, 2000);
+            } catch (error) {
+                console.log(error)
+            }
+        }
     }
 
 
     return (
         <div>
-            FoodMealEditPage
-            <h1>                {editFoodMealStage}            </h1>
+            <h1>Food Meal Edit</h1>
 
-            {isSuccess ? provideCurrentStage() : isLoading ? <div></div> : <div>Error</div>}
-
-
+            {isSuccess ? provideCurrentStage() : isLoading ? <div>Loading...</div> : <div>Error</div>}
 
             <button onClick={handleSaveProgress}>Save Progress</button>
+            {editSavedMessage &&
+                <p>Saved!</p>
+            }
 
             {<Pagination paginationInfo={new PaginationInfo(editFoodMealStage, 4, null)} onPageChange={setEditFoodMealStage} navigationNeeded={false} />}
-
-
         </div>
     )
 }
