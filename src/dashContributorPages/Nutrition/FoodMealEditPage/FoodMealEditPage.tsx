@@ -22,6 +22,7 @@ export interface usedIngredient {
     name: string
     quantityUsed: number | undefined
     measuringMethod: string | undefined
+    measuringUnit: string | undefined
 }
 export interface singleIngredient {
     id: string,
@@ -50,7 +51,7 @@ function FoodMealEditPage() {
 
     function provideCurrentStage() {
         if (editFoodMealStage == 1) return <ConfirmInitialDetailsStage handleFormDataChange={handleFormDataChange} name={editFormData?.name} description={editFormData?.description} />
-        else if (editFoodMealStage == 2) return <SelectIngredientsStage mealIngredients={editFormData.mealIngredients} handleAddingIngredient={handleAddingIngredient} handleRemovingIngredient={handleRemovingIngredient} />
+        else if (editFoodMealStage == 2) return <SelectIngredientsStage mealIngredients={editFormData.mealIngredients} handleAddingIngredient={handleAddingIngredient} handleUpdatingIngredient={handleUpdatingIngredient} handleRemovingIngredient={handleRemovingIngredient} />
         else if (editFoodMealStage == 3) return <div>stage 3</div>
     }
 
@@ -68,6 +69,15 @@ function FoodMealEditPage() {
         let ingredientsPostRemoval = [...editFormData.mealIngredients].filter(ingredient => ingredient.id != ingredientToRemove.id)
         setEditFormData({ ...editFormData, mealIngredients: ingredientsPostRemoval })
     }
+
+    function handleUpdatingIngredient(ingredientToUpdate: usedIngredient): void {
+        var result = editFormData.mealIngredients.findIndex((t) => t.id === ingredientToUpdate.id)
+        var copyArray = editFormData.mealIngredients
+        copyArray[result] = ingredientToUpdate
+        setEditFormData(prev => ({ ...prev, mealIngredients: copyArray }))
+    }
+
+
 
     async function handleSaveProgress() {
         if (id != undefined) {

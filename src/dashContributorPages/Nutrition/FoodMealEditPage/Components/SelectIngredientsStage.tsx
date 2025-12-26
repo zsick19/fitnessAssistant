@@ -7,21 +7,24 @@ import Pagination from "../../../../components/Pagination";
 import { useSelector } from "react-redux";
 import { selectFoodGroups } from "../../../../features/Initializations/InitializationSliceApi";
 import { manualRefetchOfInitializedData } from "../../../../features/Prefetch";
+import EditSelectedIngredientModal from "./EditSelectedIngredientModal";
 
 
 
 interface FormProps {
     mealIngredients: usedIngredient[],
     handleAddingIngredient: (usedIngredient: usedIngredient) => void
+    handleUpdatingIngredient: (usedIngredient: usedIngredient) => void
     handleRemovingIngredient: (usedIngredient: usedIngredient) => void
 }
 
 
 
 
-function SelectIngredientsStage({ mealIngredients, handleAddingIngredient, handleRemovingIngredient }: FormProps) {
+function SelectIngredientsStage({ mealIngredients, handleAddingIngredient, handleUpdatingIngredient, handleRemovingIngredient }: FormProps) {
 
     const [selectedIngredient, setSelectedIngredient] = useState<singleIngredient | null>(null)
+    const [selectEditIngredient, setSelectEditIngredient] = useState<usedIngredient | null>(null)
 
     const [search, setSearch] = useState<string | undefined>(undefined)
     const [currentPage, setCurrentPage] = useState<number>(1)
@@ -93,7 +96,7 @@ function SelectIngredientsStage({ mealIngredients, handleAddingIngredient, handl
 
     return (
         <div>
-            <h2>SelectIngredientsStage</h2>
+            <h2>Select Ingredients Stage</h2>
             <div>
                 <form className="flex" onSubmit={handleSearch}>
                     {isFoodGroupError ? <div><button onClick={() => manualRefetchOfInitializedData()}>Refetch Initialized Data</button></div> :
@@ -128,6 +131,7 @@ function SelectIngredientsStage({ mealIngredients, handleAddingIngredient, handl
                             <th>Ingredient</th>
                             <th>Quantity Used</th>
                             <th>Measuring Method</th>
+                            <th>Measuring Unit</th>
                             <th>Edit</th>
                             <th>Remove</th>
                         </tr>
@@ -138,7 +142,8 @@ function SelectIngredientsStage({ mealIngredients, handleAddingIngredient, handl
                             <td>{ingredient.name}</td>
                             <td>{ingredient.quantityUsed}</td>
                             <td>{ingredient.measuringMethod}</td>
-                            <td>edit</td>
+                            <td>{ingredient.measuringUnit}</td>
+                            <td><button onClick={() => setSelectEditIngredient(ingredient)}>Edit</button></td>
                             <td><button onClick={() => handleRemovingIngredient(ingredient)}>Remove</button></td>
                         </tr>)
                         )}
@@ -147,6 +152,7 @@ function SelectIngredientsStage({ mealIngredients, handleAddingIngredient, handl
             </div>
 
             {selectedIngredient && (<SelectedIngredientModal ingredient={selectedIngredient} handleAddingIngredient={handleAddingIngredient} onClose={() => setSelectedIngredient(null)} />)}
+            {selectEditIngredient && <EditSelectedIngredientModal ingredient={selectEditIngredient} handleUpdatingIngredient={handleUpdatingIngredient} onClose={() => setSelectEditIngredient(null)} />}
         </div>
     )
 }
