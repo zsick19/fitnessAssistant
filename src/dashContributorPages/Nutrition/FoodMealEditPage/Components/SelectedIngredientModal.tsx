@@ -2,6 +2,7 @@ import { useEffect, useRef, useState } from 'react'
 import { createPortal } from 'react-dom'
 import type { singleIngredient, usedIngredient } from '../FoodMealEditPage'
 import { useParams } from 'react-router-dom'
+import { calculateConversion } from '../../../../services/MeasurementConverter'
 
 
 
@@ -18,10 +19,15 @@ function SelectedIngredientModal({ ingredient, onClose, handleAddingIngredient }
     const [measuringMethod, setMeasuringMethod] = useState<string | undefined>()
     const [displayMeasuringMethod, setDisplayMeasuringMethod] = useState<boolean>(true)
     const [ingredientToAdd, setIngredientToAdd] = useState<usedIngredient>(
-        { rawIngredientId: ingredient.id, 
-        name: ingredient.name, quantityUsed: undefined, 
-        measuringMethod: undefined, measuringUnit: undefined, 
-        FoodMealId: id || '' })
+        {
+            rawIngredientId: ingredient.id,
+            name: ingredient.name, quantityUsed: undefined,
+            measuringMethod: undefined,
+            measuringUnit: undefined,
+            FoodMealId: id || '',
+            totalCalories: undefined,
+            totalProteinGrams: undefined
+        })
 
     useEffect(() => { if (ingredient) dialogRef.current?.showModal(); }, [ingredient])
 
@@ -45,11 +51,11 @@ function SelectedIngredientModal({ ingredient, onClose, handleAddingIngredient }
                     <div>
                         <p>Metric Units</p>
                         <div>
-                            <input type="radio" id="gramWeight" name="measuringMethod" value="grams" />
+                            <input type="radio" id="gramWeight" name="measuringMethod" value="gram" />
                             <label htmlFor="gramWeight">Grams</label>
                         </div>
                         <div>
-                            <input type="radio" id="kiloGramWeight" name="measuringMethod" value="kiloGrams" />
+                            <input type="radio" id="kiloGramWeight" name="measuringMethod" value="kilogram" />
                             <label htmlFor="kiloGramWeight">kiloGrams</label>
                         </div>
                     </div>
@@ -120,12 +126,14 @@ function SelectedIngredientModal({ ingredient, onClose, handleAddingIngredient }
 
     function handleQuantityChange(e: React.ChangeEvent<HTMLInputElement>) {
         let parsedQuantity = parseInt(e.target.value)
-        setIngredientToAdd(prev => ({ ...prev, quantityUsed: parsedQuantity }))
+        let conversion = calculateConversion(ingredient.unitOfMeasurement, ingredient.calories, ingredient.protein, ingredient.baseLineMeasurement, ingredientToAdd.measuringUnit, parsedQuantity)
+        setIngredientToAdd(prev => ({ ...prev, quantityUsed: parsedQuantity, totalCalories: conversion.calories, totalProteinGrams: conversion.protein }))
     }
 
     function handleMeasuringUnitChange(event: React.FormEvent<HTMLFieldSetElement>) {
         const target = event.target as HTMLInputElement
-        setIngredientToAdd(prev => ({ ...prev, measuringUnit: target.value }))
+        let conversion = calculateConversion(ingredient.unitOfMeasurement, ingredient.calories, ingredient.protein, ingredient.baseLineMeasurement, target.value, ingredientToAdd.quantityUsed)
+        setIngredientToAdd(prev => ({ ...prev, measuringUnit: target.value, totalCalories: conversion.calories, totalProteinGrams: conversion.protein }))
     }
 
 
@@ -141,16 +149,29 @@ function SelectedIngredientModal({ ingredient, onClose, handleAddingIngredient }
 
     const canAddIngredient = ingredientToAdd.measuringMethod != undefined && ingredientToAdd.quantityUsed != undefined
 
-
+    console.log(ingredient)
 
     return createPortal(
         <dialog ref={dialogRef} onClose={onClose} role='dialog'>
-            <h2>               Selected Ingredient    </h2>
-            {ingredient.name}
+            <h2>Selected Ingredient: {ingredient.name}</h2>
+            <div className='flex'>
+                <div>
+                    <p>BaseLine Per {ingredient.baseLineMeasurement} {ingredient.unitOfMeasurement}</p>
+                    <p>{ingredient.calories} Calories</p>
+                    <p>{ingredient.protein} Grams of Protein</p>
+                </div>
+
+                <div>
+                    <p>Conversion to Meal Quantity</p>
+                    <p>Calories: {ingredientToAdd.totalCalories?.toFixed(2) || 0.00}</p>
+                    <p>Protein: {ingredientToAdd.totalProteinGrams?.toFixed(2) || 0.00} grams</p>
+                </div>
+            </div>
+
             <form>
                 {measuringMethod && <>
                     <label htmlFor="quantity">Quantity Used</label>
-                    <input type="text" name="quantity" id="quantity" min={0} value={ingredientToAdd.quantityUsed} onChange={(e) => handleQuantityChange(e)} />
+                    <input type="number" name="quantity" id="quantity" min={0} value={ingredientToAdd.quantityUsed} onChange={(e) => handleQuantityChange(e)} />
                 </>}
 
                 {displayMeasuringMethod &&

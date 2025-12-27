@@ -5,7 +5,7 @@ export interface RawIngredientSummary{
     name:string,
     calories:number,
     unitOfMeasurement:string,
-    baseLineMeasurement:string,
+    baseLineMeasurement:number,
     foodGroup:string,
     protein:number
 }

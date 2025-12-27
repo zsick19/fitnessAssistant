@@ -24,13 +24,20 @@ export interface usedIngredient {
     quantityUsed: number | undefined
     measuringMethod: string | undefined
     measuringUnit: string | undefined
-    FoodMealId: string
+    FoodMealId: string,
+    totalCalories: number | undefined,
+    totalProteinGrams: number | undefined
 }
 
 
 export interface singleIngredient {
     id: string,
-    name: string
+    name: string,
+    calories: number,
+    unitOfMeasurement: string,
+    baseLineMeasurement: number,
+    protein: number,
+    foodGroup: string
 }
 
 
@@ -47,7 +54,6 @@ function FoodMealEditPage() {
 
     useEffect(() => {
         if (isSuccess) {
-            console.log(data)
             setEditFormData(data)
             setEditFoodMealStage(data.mostRecentMealCreationStage)
         }

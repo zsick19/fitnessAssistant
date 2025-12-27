@@ -130,8 +130,8 @@ function SelectIngredientsStage({ mealIngredients, handleAddingIngredient, handl
                         <tr>
                             <th>Ingredient</th>
                             <th>Quantity Used</th>
-                            <th>Measuring Method</th>
-                            <th>Measuring Unit</th>
+                            <th>Calories</th>
+                            <th>Protein</th>
                             <th>Edit</th>
                             <th>Remove</th>
                         </tr>
@@ -140,17 +140,143 @@ function SelectIngredientsStage({ mealIngredients, handleAddingIngredient, handl
                         {mealIngredients.map((ingredient) =>
                         (<tr>
                             <td>{ingredient.name}</td>
-                            <td>{ingredient.quantityUsed}</td>
-                            <td>{ingredient.measuringMethod}</td>
-                            <td>{ingredient.measuringUnit}</td>
+                            <td>{ingredient.quantityUsed} {ingredient.measuringUnit}</td>
+                            <td>{ingredient.totalCalories?.toFixed()}</td>
+                            <td>{ingredient.totalProteinGrams?.toFixed()}g</td>
                             <td><button onClick={() => setSelectEditIngredient(ingredient)}>Edit</button></td>
                             <td><button onClick={() => handleRemovingIngredient(ingredient)}>Remove</button></td>
                         </tr>)
                         )}
                     </tbody>
                 </table>
-            </div>
+                <br />
+                <div>
+                    <h2>Total Food Output</h2>
+                    <input type="number" min={0} />
 
+                    <select name="" id="">
+                        <option value="cup">Cup</option>
+                        <option value="pound">Pound</option>
+                    </select>
+
+                    <br />
+                    <div className="flex">
+                        <div>
+                            <label htmlFor="numberOfServings">Number of Servings:</label>
+                            <input type="number" name="numberOfServings" id="numberOfServings" min={1} />
+                        </div>
+
+                        <div>
+                            <p>Serving Size: 0.5 cup (Calculated from above selection)</p>
+                            <div>
+
+                                <p>Per Serving:</p>
+                                <p>350 Calories</p>
+                                <p>23g Protein</p>
+                            </div>
+                        </div>
+
+                    </div>
+                    <div>
+                        <fieldset className="flex">
+                            <legend>Serving visual on a large plate:</legend>
+                            <div>
+                                <input type="radio" name="largePlate" id="largePlateEighth" value='eighth' />
+                                <label htmlFor="largePlateEighth">1/8</label>
+                            </div>
+                            <div>
+                                <input type="radio" name="largePlate" id="largePlateFourth" value='fourth' />
+                                <label htmlFor="largePlateFourth">1/4</label>
+                            </div>
+                            <div>
+                                <input type="radio" name="largePlate" id="largePlateThird" value='third' />
+                                <label htmlFor="largePlateThird">1/3</label>
+                            </div>
+                            <div>
+                                <input type="radio" name="largePlate" id="largePlateHalf" value='half' />
+                                <label htmlFor="largePlateHalf">1/2</label>
+                            </div>
+                            <div>
+                                <input type="radio" name="largePlate" id="largePlateTwoThirds" value='twoThirds' />
+                                <label htmlFor="largePlateTwoThirds">2/3</label>
+                            </div>
+                            <div>
+                                <input type="radio" name="largePlate" id="largePlateThreeFourths" value='threeFourths' />
+                                <label htmlFor="largePlateThreeFourths">3/4</label>
+                            </div>
+                            <div>
+                                <input type="radio" name="largePlate" id="largePlateWhole" value='wholePlate' />
+                                <label htmlFor="largePlateWhole">Whole</label>
+                            </div>
+                        </fieldset>
+
+                        <fieldset className="flex">
+                            <legend>Serving visual on a small plate:</legend>
+                            <div>
+                                <input type="radio" name="smallPlate" id="smallPlateEighth" value='eighth' />
+                                <label htmlFor="smallPlateEighth">1/8</label>
+                            </div>
+                            <div>
+                                <input type="radio" name="smallPlate" id="smallPlateFourth" value='fourth' />
+                                <label htmlFor="smallPlateFourth">1/4</label>
+                            </div>
+                            <div>
+                                <input type="radio" name="smallPlate" id="smallPlateThird" value='third' />
+                                <label htmlFor="smallPlateThird">1/3</label>
+                            </div>
+                            <div>
+                                <input type="radio" name="smallPlate" id="smallPlateHalf" value='half' />
+                                <label htmlFor="smallPlateHalf">1/2</label>
+                            </div>
+                            <div>
+                                <input type="radio" name="smallPlate" id="smallPlateTwoThirds" value='twoThirds' />
+                                <label htmlFor="smallPlateTwoThirds">2/3</label>
+                            </div>
+                            <div>
+                                <input type="radio" name="smallPlate" id="smallPlateThreeFourths" value='threeFourths' />
+                                <label htmlFor="smallPlateThreeFourths">3/4</label>
+                            </div>
+                            <div>
+                                <input type="radio" name="smallPlate" id="smallPlateWhole" value='wholePlate' />
+                                <label htmlFor="smallPlateWhole">Whole</label>
+                            </div>
+                        </fieldset>
+
+                        <fieldset className="flex">
+                            <legend>Serving visual in a bowl:</legend>
+                            <div>
+                                <input type="radio" name="largeBowl" id="largeBowlEighth" value='eighth' />
+                                <label htmlFor="largeBowlEighth">1/8</label>
+                            </div>
+                            <div>
+                                <input type="radio" name="largeBowl" id="largeBowlFourth" value='fourth' />
+                                <label htmlFor="largeBowlFourth">1/4</label>
+                            </div>
+                            <div>
+                                <input type="radio" name="largeBowl" id="largeBowlThird" value='third' />
+                                <label htmlFor="largeBowlThird">1/3</label>
+                            </div>
+                            <div>
+                                <input type="radio" name="largeBowl" id="largeBowlHalf" value='half' />
+                                <label htmlFor="largeBowlHalf">1/2</label>
+                            </div>
+                            <div>
+                                <input type="radio" name="largeBowl" id="largeBowlTwoThirds" value='twoThirds' />
+                                <label htmlFor="largeBowlTwoThirds">2/3</label>
+                            </div>
+                            <div>
+                                <input type="radio" name="largeBowl" id="largeBowlThreeFourths" value='threeFourths' />
+                                <label htmlFor="largeBowlThreeFourths">3/4</label>
+                            </div>
+                            <div>
+                                <input type="radio" name="largeBowl" id="largeBowlWhole" value='wholeBowl' />
+                                <label htmlFor="largeBowlWhole">Whole</label>
+                            </div>
+                        </fieldset>
+                    </div>
+                </div>
+            </div>
+            <br />
             {selectedIngredient && <SelectedIngredientModal ingredient={selectedIngredient} handleAddingIngredient={handleAddingIngredient} onClose={() => setSelectedIngredient(null)} />}
             {selectEditIngredient && <EditSelectedIngredientModal ingredient={selectEditIngredient} handleUpdatingIngredient={handleUpdatingIngredient} onClose={() => setSelectEditIngredient(null)} />}
         </div>
