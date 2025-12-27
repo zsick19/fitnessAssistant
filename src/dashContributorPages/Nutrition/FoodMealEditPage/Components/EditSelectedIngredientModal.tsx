@@ -1,16 +1,18 @@
 import { useEffect, useRef, useState } from 'react'
 import { createPortal } from 'react-dom'
-import type { usedIngredient } from '../FoodMealEditPage'
+import type { singleIngredient, usedIngredient } from '../FoodMealEditPage'
+import { calculateConversion } from '../../../../services/MeasurementConverter'
 
 
 
 interface ModalProps {
     ingredient: usedIngredient,
+    rawIngredient: singleIngredient
     onClose: () => void,
     handleUpdatingIngredient: (usedIngredient: usedIngredient) => void
 }
 
-function EditSelectedIngredientModal({ ingredient, onClose, handleUpdatingIngredient }: ModalProps) {
+function EditSelectedIngredientModal({ ingredient, rawIngredient, onClose, handleUpdatingIngredient }: ModalProps) {
 
     const dialogRef = useRef<HTMLDialogElement>(null)
     const [measuringMethod, setMeasuringMethod] = useState<string | undefined>(ingredient.measuringMethod)
@@ -115,7 +117,8 @@ function EditSelectedIngredientModal({ ingredient, onClose, handleUpdatingIngred
 
     function handleQuantityChange(e: React.ChangeEvent<HTMLInputElement>) {
         let parsedQuantity = parseInt(e.target.value)
-        setIngredientToAdd(prev => ({ ...prev, quantityUsed: parsedQuantity }))
+        let conversion = calculateConversion(rawIngredient.unitOfMeasurement, rawIngredient.calories, rawIngredient.protein, rawIngredient.baseLineMeasurement, ingredientToAdd.measuringUnit, parsedQuantity)
+        setIngredientToAdd(prev => ({ ...prev, quantityUsed: parsedQuantity, totalCalories: conversion.calories, totalProteinGrams: conversion.protein }))
     }
 
     function handleMeasuringUnitChange(event: React.FormEvent<HTMLFieldSetElement>) {

@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react'
+import React, { useEffect, useState, type FormEvent } from 'react'
 import { useParams } from 'react-router-dom'
 import { useGetSelectFoodMealQuery, useUpdateFoodMealMutation } from '../../../features/FoodMeals/foodMealSliceApi';
 import { PaginationInfo } from '../../../models/PaginationInfo';
@@ -9,12 +9,23 @@ import './FoodMealEditPage.css'
 import * as jsonpatch from 'fast-json-patch';
 
 
-interface editFoodMealSubmission {
+export interface editFoodMealSubmission {
     id: string | undefined,
     name: string | undefined,
     description: string | undefined
     mealIngredients: usedIngredient[]
     mostRecentMealCreationStage: number | undefined
+    totalCalories: number
+    totalProtein: number
+    totalFoodOutputQuantity: number | undefined
+    totalFoodMeasurementUnit: string | undefined
+    numberOfServings: number | undefined
+    servingSizePerMeasuringUnit: number | undefined
+    largePlateSize: string | undefined
+    smallPlateSize: string | undefined
+    bowlSize: string | undefined
+    caloriesPerServing: number | undefined
+    proteinPerServing: number | undefined
 }
 
 
@@ -25,11 +36,9 @@ export interface usedIngredient {
     measuringMethod: string | undefined
     measuringUnit: string | undefined
     FoodMealId: string,
-    totalCalories: number | undefined,
-    totalProteinGrams: number | undefined
+    totalCalories: number,
+    totalProteinGrams: number
 }
-
-
 export interface singleIngredient {
     id: string,
     name: string,
@@ -46,7 +55,10 @@ function FoodMealEditPage() {
     const { id } = useParams();
     const [editFoodMealStage, setEditFoodMealStage] = useState<number>(1)
     const [editSavedMessage, setEditSavedMessage] = useState<string | undefined>(undefined);
-    const [editFormData, setEditFormData] = useState<editFoodMealSubmission>({ id: undefined, name: undefined, description: undefined, mealIngredients: [], mostRecentMealCreationStage: undefined })
+    const [editFormData, setEditFormData] = useState<editFoodMealSubmission>({
+        id: undefined, name: undefined, description: undefined, mealIngredients: [], mostRecentMealCreationStage: undefined, totalFoodOutputQuantity: undefined, numberOfServings: undefined, totalCalories: 0, totalProtein: 0,
+        totalFoodMeasurementUnit: undefined, servingSizePerMeasuringUnit: undefined, caloriesPerServing: undefined, proteinPerServing: undefined, largePlateSize: undefined, smallPlateSize: undefined, bowlSize: undefined
+    })
 
     const { data, isError, isSuccess, error, isLoading } = useGetSelectFoodMealQuery({ id })
     const [updateFoodMeal] = useUpdateFoodMealMutation()
@@ -54,7 +66,7 @@ function FoodMealEditPage() {
 
     useEffect(() => {
         if (isSuccess) {
-            setEditFormData(data)
+            setEditFormData({ ...data, totalCalories: 0, totalProtein: 0 })
             setEditFoodMealStage(data.mostRecentMealCreationStage)
         }
     }, [data])
@@ -62,7 +74,12 @@ function FoodMealEditPage() {
 
     function provideCurrentStage() {
         if (editFoodMealStage == 1) return <ConfirmInitialDetailsStage handleFormDataChange={handleFormDataChange} name={editFormData?.name} description={editFormData?.description} />
-        else if (editFoodMealStage == 2) return <SelectIngredientsStage mealIngredients={editFormData.mealIngredients} handleAddingIngredient={handleAddingIngredient} handleUpdatingIngredient={handleUpdatingIngredient} handleRemovingIngredient={handleRemovingIngredient} />
+        else if (editFoodMealStage == 2) return <SelectIngredientsStage mealIngredients={editFormData.mealIngredients} editFormData={editFormData}
+            handleAddingIngredient={handleAddingIngredient}
+            handleUpdatingIngredient={handleUpdatingIngredient}
+            handleRemovingIngredient={handleRemovingIngredient}
+            handleFoodOutputChange={handleFoodOutputChange}
+        />
         else if (editFoodMealStage == 3) return <div>stage 3</div>
     }
 
@@ -73,20 +90,38 @@ function FoodMealEditPage() {
 
     function handleAddingIngredient(ingredientToAdd: usedIngredient): void {
         let additionalIngredients = [...editFormData.mealIngredients, ingredientToAdd]
-        setEditFormData({ ...editFormData, mealIngredients: additionalIngredients })
+        console.log(ingredientToAdd)
+        let calories = editFormData.totalCalories + ingredientToAdd.totalCalories
+        let protein = editFormData.totalProtein + ingredientToAdd.totalProteinGrams
+        setEditFormData({ ...editFormData, mealIngredients: additionalIngredients, totalCalories: calories, totalProtein: protein })
     }
 
     function handleRemovingIngredient(ingredientToRemove: usedIngredient): void {
         let ingredientsPostRemoval = [...editFormData.mealIngredients].filter(ingredient => ingredient.rawIngredientId != ingredientToRemove.rawIngredientId)
-        setEditFormData({ ...editFormData, mealIngredients: ingredientsPostRemoval })
+        let calories = editFormData.totalCalories - ingredientToRemove.totalCalories
+        let protein = editFormData.totalProtein - ingredientToRemove.totalProteinGrams
+        setEditFormData({ ...editFormData, mealIngredients: ingredientsPostRemoval, totalCalories: calories, totalProtein: protein })
     }
 
     function handleUpdatingIngredient(ingredientToUpdate: usedIngredient): void {
-        var result = editFormData.mealIngredients.findIndex((t) => t.rawIngredientId === ingredientToUpdate.rawIngredientId)
+        var indexOfUpdate = editFormData.mealIngredients.findIndex((t) => t.rawIngredientId === ingredientToUpdate.rawIngredientId)
         var copyArray = editFormData.mealIngredients
-        copyArray[result] = ingredientToUpdate
-        setEditFormData(prev => ({ ...prev, mealIngredients: copyArray }))
+        copyArray[indexOfUpdate] = ingredientToUpdate
+
+        let calorieResult = 0
+        let proteinResult = 0
+        copyArray.map((ingredient) => {
+            calorieResult = calorieResult + ingredient.totalCalories
+            proteinResult = proteinResult + ingredient.totalProteinGrams
+        })
+        setEditFormData(prev => ({ ...prev, mealIngredients: copyArray, totalCalories: calorieResult, totalProtein: proteinResult }))
     }
+
+
+    function handleFoodOutputChange(event: React.FocusEvent<HTMLFormElement>) {
+        setEditFormData({ ...editFormData, [event.target.name]: event.target.value })
+    }
+
 
 
 

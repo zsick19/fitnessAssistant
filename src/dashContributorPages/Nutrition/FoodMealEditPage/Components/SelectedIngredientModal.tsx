@@ -25,8 +25,8 @@ function SelectedIngredientModal({ ingredient, onClose, handleAddingIngredient }
             measuringMethod: undefined,
             measuringUnit: undefined,
             FoodMealId: id || '',
-            totalCalories: undefined,
-            totalProteinGrams: undefined
+            totalCalories: 0,
+            totalProteinGrams: 0
         })
 
     useEffect(() => { if (ingredient) dialogRef.current?.showModal(); }, [ingredient])
@@ -149,8 +149,6 @@ function SelectedIngredientModal({ ingredient, onClose, handleAddingIngredient }
 
     const canAddIngredient = ingredientToAdd.measuringMethod != undefined && ingredientToAdd.quantityUsed != undefined
 
-    console.log(ingredient)
-
     return createPortal(
         <dialog ref={dialogRef} onClose={onClose} role='dialog'>
             <h2>Selected Ingredient: {ingredient.name}</h2>
@@ -163,9 +161,10 @@ function SelectedIngredientModal({ ingredient, onClose, handleAddingIngredient }
 
                 <div>
                     <p>Conversion to Meal Quantity</p>
-                    <p>Calories: {ingredientToAdd.totalCalories?.toFixed(2) || 0.00}</p>
-                    <p>Protein: {ingredientToAdd.totalProteinGrams?.toFixed(2) || 0.00} grams</p>
+                    <p>Calories: {ingredientToAdd.totalCalories?.toFixed(2)}</p>
+                    <p>Protein: {ingredientToAdd.totalProteinGrams?.toFixed(2)} grams</p>
                 </div>
+
             </div>
 
             <form>
