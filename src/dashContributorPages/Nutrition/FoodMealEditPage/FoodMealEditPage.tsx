@@ -6,9 +6,9 @@ import Pagination from '../../../components/Pagination';
 import ConfirmInitialDetailsStage from './Components/ConfirmInitialDetailsStage';
 import SelectIngredientsStage from './Components/SelectIngredientsStage';
 import './FoodMealEditPage.css'
-
 import * as jsonpatch from 'fast-json-patch';
-import { applyOperation } from 'fast-json-patch';
+
+
 interface editFoodMealSubmission {
     id: string | undefined,
     name: string | undefined,
@@ -17,13 +17,17 @@ interface editFoodMealSubmission {
     mostRecentMealCreationStage: number | undefined
 }
 
+
 export interface usedIngredient {
-    id: string
+    rawIngredientId: string
     name: string
     quantityUsed: number | undefined
     measuringMethod: string | undefined
     measuringUnit: string | undefined
+    FoodMealId: string
 }
+
+
 export interface singleIngredient {
     id: string,
     name: string
@@ -43,6 +47,7 @@ function FoodMealEditPage() {
 
     useEffect(() => {
         if (isSuccess) {
+            console.log(data)
             setEditFormData(data)
             setEditFoodMealStage(data.mostRecentMealCreationStage)
         }
@@ -66,12 +71,12 @@ function FoodMealEditPage() {
     }
 
     function handleRemovingIngredient(ingredientToRemove: usedIngredient): void {
-        let ingredientsPostRemoval = [...editFormData.mealIngredients].filter(ingredient => ingredient.id != ingredientToRemove.id)
+        let ingredientsPostRemoval = [...editFormData.mealIngredients].filter(ingredient => ingredient.rawIngredientId != ingredientToRemove.rawIngredientId)
         setEditFormData({ ...editFormData, mealIngredients: ingredientsPostRemoval })
     }
 
     function handleUpdatingIngredient(ingredientToUpdate: usedIngredient): void {
-        var result = editFormData.mealIngredients.findIndex((t) => t.id === ingredientToUpdate.id)
+        var result = editFormData.mealIngredients.findIndex((t) => t.rawIngredientId === ingredientToUpdate.rawIngredientId)
         var copyArray = editFormData.mealIngredients
         copyArray[result] = ingredientToUpdate
         setEditFormData(prev => ({ ...prev, mealIngredients: copyArray }))
@@ -86,9 +91,7 @@ function FoodMealEditPage() {
                 if (patch.length > 0) await updateFoodMeal({ id, patchData: patch }).unwrap()
 
                 setEditSavedMessage("Saved")
-                setTimeout(() => {
-                    setEditSavedMessage(undefined)
-                }, 2000);
+                setTimeout(() => { setEditSavedMessage(undefined) }, 2000);
             } catch (error) {
                 console.log(error)
             }
@@ -103,9 +106,7 @@ function FoodMealEditPage() {
             {isSuccess ? provideCurrentStage() : isLoading ? <div>Loading...</div> : <div>Error</div>}
 
             <button onClick={handleSaveProgress}>Save Progress</button>
-            {editSavedMessage &&
-                <p>Saved!</p>
-            }
+            {editSavedMessage && <p>Saved!</p>}
 
             {<Pagination paginationInfo={new PaginationInfo(editFoodMealStage, 4, null)} onPageChange={setEditFoodMealStage} navigationNeeded={false} />}
         </div>

@@ -73,6 +73,10 @@ function NutritionAdminHomePage() {
             </h1>
             <Link to={'/dash/nutrition/contributor/foodMeal/create'}>Create a New Meal</Link>
 
+            <div>
+                <Link to="http://localhost:5173/dash/nutrition/contributor/foodMeal/e7af0e42-ffec-4837-9ca1-ed3c41c78c60/edit">Edit Meal</Link>
+            </div>
+
             <div className='flex'>
                 <form onSubmit={handleSearch}>
                     <input type="search" value={nameSearch} onChange={(e) => handleSearchTermChange(e)} placeholder="Meal Search" aria-label="search" />

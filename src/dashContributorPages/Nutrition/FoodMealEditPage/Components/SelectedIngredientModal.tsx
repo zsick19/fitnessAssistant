@@ -1,6 +1,7 @@
 import { useEffect, useRef, useState } from 'react'
 import { createPortal } from 'react-dom'
 import type { singleIngredient, usedIngredient } from '../FoodMealEditPage'
+import { useParams } from 'react-router-dom'
 
 
 
@@ -12,10 +13,15 @@ interface ModalProps {
 
 function SelectedIngredientModal({ ingredient, onClose, handleAddingIngredient }: ModalProps) {
 
+    const { id } = useParams()
     const dialogRef = useRef<HTMLDialogElement>(null)
     const [measuringMethod, setMeasuringMethod] = useState<string | undefined>()
     const [displayMeasuringMethod, setDisplayMeasuringMethod] = useState<boolean>(true)
-    const [ingredientToAdd, setIngredientToAdd] = useState<usedIngredient>({ id: ingredient.id, name: ingredient.name, quantityUsed: undefined, measuringMethod: undefined, measuringUnit: undefined })
+    const [ingredientToAdd, setIngredientToAdd] = useState<usedIngredient>(
+        { rawIngredientId: ingredient.id, 
+        name: ingredient.name, quantityUsed: undefined, 
+        measuringMethod: undefined, measuringUnit: undefined, 
+        FoodMealId: id || '' })
 
     useEffect(() => { if (ingredient) dialogRef.current?.showModal(); }, [ingredient])
 

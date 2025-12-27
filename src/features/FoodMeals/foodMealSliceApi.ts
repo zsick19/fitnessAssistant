@@ -37,19 +37,17 @@ export const foodMealApiSlice = apiSlice.injectEndpoints({
                 url: '/nutrition/foodMeal',
                 params:args
             }),
-            // transformResponse:(response:RawTestResponse):FoodMealSummaryResponse=>{
-            //     console.log(response)
-            //     return {
-            //         totalPages:response.totalPages,
-            //         data:response.Data
-            //     }
-                
-            // }
         }),
         getSelectFoodMeal:builder.query({
             query:(args)=>({
                 url:`/nutrition/foodMeal/${args.id}`
-            })
+            }),
+            transformResponse:(response)=>{
+                let mealIngredients=response.mealIngredients
+                mealIngredients.forEach((rawIngredient: { name: any; rawIngredient: { name: any; }; }) => {rawIngredient.name=rawIngredient.rawIngredient.name});
+                response.mealIngredients=mealIngredients
+                return response                
+            }
         }),
         createFoodMeal:builder.mutation<FoodMealCreatedResponse,FormData>({
             query:(args)=>({

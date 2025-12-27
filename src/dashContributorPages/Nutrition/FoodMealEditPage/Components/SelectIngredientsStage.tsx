@@ -151,7 +151,7 @@ function SelectIngredientsStage({ mealIngredients, handleAddingIngredient, handl
                 </table>
             </div>
 
-            {selectedIngredient && (<SelectedIngredientModal ingredient={selectedIngredient} handleAddingIngredient={handleAddingIngredient} onClose={() => setSelectedIngredient(null)} />)}
+            {selectedIngredient && <SelectedIngredientModal ingredient={selectedIngredient} handleAddingIngredient={handleAddingIngredient} onClose={() => setSelectedIngredient(null)} />}
             {selectEditIngredient && <EditSelectedIngredientModal ingredient={selectEditIngredient} handleUpdatingIngredient={handleUpdatingIngredient} onClose={() => setSelectEditIngredient(null)} />}
         </div>
     )

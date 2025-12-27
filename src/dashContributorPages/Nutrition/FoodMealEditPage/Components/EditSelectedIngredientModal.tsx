@@ -1,6 +1,6 @@
 import { useEffect, useRef, useState } from 'react'
 import { createPortal } from 'react-dom'
-import type { singleIngredient, usedIngredient } from '../FoodMealEditPage'
+import type { usedIngredient } from '../FoodMealEditPage'
 
 
 
@@ -14,7 +14,6 @@ function EditSelectedIngredientModal({ ingredient, onClose, handleUpdatingIngred
 
     const dialogRef = useRef<HTMLDialogElement>(null)
     const [measuringMethod, setMeasuringMethod] = useState<string | undefined>(ingredient.measuringMethod)
-    const [measuringUnit, setMeasuringUnit] = useState<string | undefined>(ingredient.measuringMethod)
     const [displayMeasuringMethod, setDisplayMeasuringMethod] = useState<boolean>(false)
 
     const [ingredientToAdd, setIngredientToAdd] = useState<usedIngredient>(ingredient)
@@ -146,12 +145,11 @@ function EditSelectedIngredientModal({ ingredient, onClose, handleUpdatingIngred
                     <input type="text" name="quantity" id="quantity" min={0} value={ingredientToAdd.quantityUsed} onChange={(e) => handleQuantityChange(e)} />
                 </>}
 
-                {displayMeasuringMethod &&
-                    <div>
-                        <button type="button" onClick={() => handleMeasureMethodSelection("weight")}>Weight</button>
-                        <button type="button" onClick={() => handleMeasureMethodSelection("volume")}>Volume</button>
-                        <button type="button" onClick={() => handleMeasureMethodSelection("unit")}>Count</button>
-                    </div>}
+                {displayMeasuringMethod && <div>
+                    <button type="button" onClick={() => handleMeasureMethodSelection("weight")}>Weight</button>
+                    <button type="button" onClick={() => handleMeasureMethodSelection("volume")}>Volume</button>
+                    <button type="button" onClick={() => handleMeasureMethodSelection("unit")}>Count</button>
+                </div>}
 
                 {measuringMethod && provideCorrectMeasureMethod()}
             </form>
