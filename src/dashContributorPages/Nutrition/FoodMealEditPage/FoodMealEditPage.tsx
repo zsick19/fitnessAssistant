@@ -137,10 +137,11 @@ function FoodMealEditPage() {
         if (id != undefined) {
             try {
                 let patch = jsonpatch.compare(data, { ...editFormData, mostRecentMealCreationStage: editFoodMealStage })
-                patch = patch.filter(op => !op.path.startsWith('/mealIngredients'))
 
-                patch.push({ op: 'replace', path: "/mealIngredients", value: editFormData.mealIngredients })
-                console.log(patch)
+                if (patch.find(op => op.path.startsWith('/mealIngredients'))) {
+                    patch = patch.filter(op => !op.path.startsWith('/mealIngredients'))
+                    patch.push({ op: 'replace', path: "/mealIngredients", value: editFormData.mealIngredients })
+                }
 
                 if (patch.length > 0) await updateFoodMeal({ id, patchData: patch.reverse() }).unwrap()
 
