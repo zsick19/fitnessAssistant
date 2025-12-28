@@ -149,8 +149,9 @@ export const calculateConversion = (
   }
 
   return {
-    calories:
-      (baseCalories / baseQty) * conversionMultiplier * quantityOfChosenUnit,
+    calories: Math.round(
+      (baseCalories / baseQty) * conversionMultiplier * quantityOfChosenUnit
+    ),
     protein:
       (baseProtein / baseQty) * conversionMultiplier * quantityOfChosenUnit,
   };

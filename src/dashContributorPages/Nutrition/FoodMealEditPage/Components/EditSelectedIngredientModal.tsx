@@ -14,6 +14,7 @@ interface ModalProps {
 
 function EditSelectedIngredientModal({ ingredient, rawIngredient, onClose, handleUpdatingIngredient }: ModalProps) {
 
+    console.log(ingredient)
     const dialogRef = useRef<HTMLDialogElement>(null)
     const [measuringMethod, setMeasuringMethod] = useState<string | undefined>(ingredient.measuringMethod)
     const [displayMeasuringMethod, setDisplayMeasuringMethod] = useState<boolean>(false)
@@ -30,11 +31,11 @@ function EditSelectedIngredientModal({ ingredient, rawIngredient, onClose, handl
                     <div>
                         <p>US Custom</p>
                         <div>
-                            <input type="radio" id="ounceWeight" name="measuringMethod" value="ounce" checked={ingredientToAdd.measuringUnit === 'ounce'} />
+                            <input type="radio" id="ounceWeight" name="measuringUnit" value="ounce" checked={ingredientToAdd.measuringUnit === 'ounce'} />
                             <label htmlFor="ounceWeight">Ounces</label>
                         </div>
                         <div>
-                            <input type="radio" id="poundWeight" name="measuringMethod" value="pound" checked={ingredientToAdd.measuringUnit === 'pound'} />
+                            <input type="radio" id="poundWeight" name="measuringUnit" value="pound" checked={ingredientToAdd.measuringUnit === 'pound'} />
                             <label htmlFor="poundWeight">Pounds (lb)</label>
                         </div>
                     </div>
@@ -42,11 +43,11 @@ function EditSelectedIngredientModal({ ingredient, rawIngredient, onClose, handl
                     <div>
                         <p>Metric Units</p>
                         <div>
-                            <input type="radio" id="gramWeight" name="measuringMethod" value="grams" checked={ingredientToAdd.measuringUnit === 'grams'} />
+                            <input type="radio" id="gramWeight" name="measuringUnit" value="grams" checked={ingredientToAdd.measuringUnit === 'grams'} />
                             <label htmlFor="gramWeight">Grams</label>
                         </div>
                         <div>
-                            <input type="radio" id="kiloGramWeight" name="measuringMethod" value="kiloGrams" checked={ingredientToAdd.measuringUnit === 'kiloGrams'} />
+                            <input type="radio" id="kiloGramWeight" name="measuringUnit" value="kiloGrams" checked={ingredientToAdd.measuringUnit === 'kiloGrams'} />
                             <label htmlFor="kiloGramWeight">kiloGrams</label>
                         </div>
                     </div>
@@ -59,19 +60,19 @@ function EditSelectedIngredientModal({ ingredient, rawIngredient, onClose, handl
                     <div>
                         <p>US Custom</p>
                         <div>
-                            <input type="radio" id="cupVolume" name="measuringMethod" value="cup" checked={ingredientToAdd.measuringUnit === 'cup'} />
+                            <input type="radio" id="cupVolume" name="measuringUnit" value="cup" checked={ingredientToAdd.measuringUnit === 'cup'} />
                             <label htmlFor="cupVolume">Cups</label>
                         </div>
                         <div>
-                            <input type="radio" id="pintVolume" name="measuringMethod" value="pint" checked={ingredientToAdd.measuringUnit === 'pint'} />
+                            <input type="radio" id="pintVolume" name="measuringUnit" value="pint" checked={ingredientToAdd.measuringUnit === 'pint'} />
                             <label htmlFor="pintVolume">Pints</label>
                         </div>
                         <div>
-                            <input type="radio" id="quartVolume" name="measuringMethod" value="quart" checked={ingredientToAdd.measuringUnit === 'quart'} />
+                            <input type="radio" id="quartVolume" name="measuringUnit" value="quart" checked={ingredientToAdd.measuringUnit === 'quart'} />
                             <label htmlFor="quartVolume">Quarts</label>
                         </div>
                         <div>
-                            <input type="radio" id="gallonVolume" name="measuringMethod" value="gallon" checked={ingredientToAdd.measuringUnit === 'gallon'} />
+                            <input type="radio" id="gallonVolume" name="measuringUnit" value="gallon" checked={ingredientToAdd.measuringUnit === 'gallon'} />
                             <label htmlFor="gallonVolume">Gallons</label>
                         </div>
                     </div>
@@ -79,11 +80,11 @@ function EditSelectedIngredientModal({ ingredient, rawIngredient, onClose, handl
                     <div>
                         <p>Metric Units</p>
                         <div>
-                            <input type="radio" id="milliliterVolume" name="measuringMethod" value="milliliter" />
+                            <input type="radio" id="milliliterVolume" name="measuringUnit" value="milliliter" />
                             <label htmlFor="milliliterVolume">Milliliters</label>
                         </div>
                         <div>
-                            <input type="radio" id="literVolume" name="measuringMethod" value="liter" />
+                            <input type="radio" id="literVolume" name="measuringUnit" value="liter" />
                             <label htmlFor="literVolume">Liters</label>
                         </div>
                     </div>
@@ -94,19 +95,19 @@ function EditSelectedIngredientModal({ ingredient, rawIngredient, onClose, handl
                 <h3> Measurement By Unit </h3>
                 <fieldset onChange={handleMeasuringUnitChange}>
                     <div>
-                        <input type="radio" id="quarterUnit" name="measuringMethod" value="quarterUnit" checked={ingredientToAdd.measuringUnit === 'quarterUnit'} />
+                        <input type="radio" id="quarterUnit" name="measuringUnit" value="quarterUnit" checked={ingredientToAdd.measuringUnit === 'quarterUnit'} />
                         <label htmlFor="quarterUnit">1/4 Quarter Unit</label>
                     </div>
                     <div>
-                        <input type="radio" id="halfUnit" name="measuringMethod" value="halfUnit" checked={ingredientToAdd.measuringUnit === 'halfUnit'} />
+                        <input type="radio" id="halfUnit" name="measuringUnit" value="halfUnit" checked={ingredientToAdd.measuringUnit === 'halfUnit'} />
                         <label htmlFor="halfUnit">1/2 Half Unit</label>
                     </div>
                     <div>
-                        <input type="radio" id="threeQuarterUnit" name="measuringMethod" value="threeQuarterUnit" checked={ingredientToAdd.measuringUnit === 'threeQuarterUnit'} />
+                        <input type="radio" id="threeQuarterUnit" name="measuringUnit" value="threeQuarterUnit" checked={ingredientToAdd.measuringUnit === 'threeQuarterUnit'} />
                         <label htmlFor="threeQuarterUnit">3/4 Quarter Unit</label>
                     </div>
                     <div>
-                        <input type="radio" id="wholeUnit" name="measuringMethod" value="wholeUnit" checked={ingredientToAdd.measuringUnit === 'wholeUnit'} />
+                        <input type="radio" id="wholeUnit" name="measuringUnit" value="wholeUnit" checked={ingredientToAdd.measuringUnit === 'wholeUnit'} />
                         <label htmlFor="wholeUnit">Whole Unit</label>
                     </div>
                 </fieldset>
@@ -126,8 +127,6 @@ function EditSelectedIngredientModal({ ingredient, rawIngredient, onClose, handl
         setIngredientToAdd(prev => ({ ...prev, measuringUnit: target.value }))
     }
 
-
-
     function handleMeasureMethodSelection(selection: (string)) {
         setMeasuringMethod(selection)
         setDisplayMeasuringMethod(false)
@@ -145,7 +144,7 @@ function EditSelectedIngredientModal({ ingredient, rawIngredient, onClose, handl
             <form>
                 {measuringMethod && <>
                     <label htmlFor="quantity">Quantity Used</label>
-                    <input type="text" name="quantity" id="quantity" min={0} value={ingredientToAdd.quantityUsed} onChange={(e) => handleQuantityChange(e)} />
+                    <input type="number" name="quantity" id="quantity" min={0} value={ingredientToAdd.quantityUsed} onChange={(e) => handleQuantityChange(e)} />
                 </>}
 
                 {displayMeasuringMethod && <div>

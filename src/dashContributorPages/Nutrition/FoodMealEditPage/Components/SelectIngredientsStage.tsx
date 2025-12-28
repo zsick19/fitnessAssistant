@@ -131,10 +131,10 @@ function SelectIngredientsStage({ mealIngredients, editFormData, handleAddingIng
                 <table>
                     <thead>
                         <tr>
-                            <th>Ingredient</th>
-                            <th>Total Amount</th>
-                            <th>Calories</th>
-                            <th>Protein</th>
+                            <th>Ingredient Name</th>
+                            <th>Quantity Used</th>
+                            <th>Calorie Count</th>
+                            <th>Protein(Grams)</th>
                             <th>Edit</th>
                             <th>Remove</th>
                         </tr>
@@ -144,8 +144,8 @@ function SelectIngredientsStage({ mealIngredients, editFormData, handleAddingIng
                         (<tr>
                             <td>{ingredient.name}</td>
                             <td>{ingredient.quantityUsed} {ingredient.measuringUnit}</td>
-                            <td>{ingredient.totalCalories?.toFixed()} Calories</td>
-                            <td>{ingredient.totalProteinGrams?.toFixed(2)} Grams</td>
+                            <td>{ingredient.totalCalories} Calories</td>
+                            <td>{ingredient.totalProteinGrams?.toFixed(2)} G</td>
                             <td><button onClick={() => setSelectEditIngredient(ingredient)}>Edit</button></td>
                             <td><button onClick={() => handleRemovingIngredient(ingredient)}>Remove</button></td>
                         </tr>)
@@ -185,31 +185,31 @@ function SelectIngredientsStage({ mealIngredients, editFormData, handleAddingIng
                             <fieldset className="flex">
                                 <legend>Serving visual on a large plate:</legend>
                                 <div>
-                                    <input type="radio" name="largePlateSize" id="largePlateEighth" value='eighth' />
+                                    <input type="radio" name="largePlateSize" id="largePlateEighth" value='Eighth' />
                                     <label htmlFor="largePlateEighth">1/8</label>
                                 </div>
                                 <div>
-                                    <input type="radio" name="largePlateSize" id="largePlateFourth" value='fourth' />
+                                    <input type="radio" name="largePlateSize" id="largePlateFourth" value='Fourth' />
                                     <label htmlFor="largePlateFourth">1/4</label>
                                 </div>
                                 <div>
-                                    <input type="radio" name="largePlateSize" id="largePlateThird" value='third' />
+                                    <input type="radio" name="largePlateSize" id="largePlateThird" value='Third' />
                                     <label htmlFor="largePlateThird">1/3</label>
                                 </div>
                                 <div>
-                                    <input type="radio" name="largePlateSize" id="largePlateHalf" value='half' />
+                                    <input type="radio" name="largePlateSize" id="largePlateHalf" value='Half' />
                                     <label htmlFor="largePlateHalf">1/2</label>
                                 </div>
                                 <div>
-                                    <input type="radio" name="largePlateSize" id="largePlateTwoThirds" value='twoThirds' />
+                                    <input type="radio" name="largePlateSize" id="largePlateTwoThirds" value='TwoThirds' />
                                     <label htmlFor="largePlateTwoThirds">2/3</label>
                                 </div>
                                 <div>
-                                    <input type="radio" name="largePlateSize" id="largePlateThreeFourths" value='threeFourths' />
+                                    <input type="radio" name="largePlateSize" id="largePlateThreeFourths" value='ThreeFourths' />
                                     <label htmlFor="largePlateThreeFourths">3/4</label>
                                 </div>
                                 <div>
-                                    <input type="radio" name="largePlateSize" id="largePlateWhole" value='wholePlate' />
+                                    <input type="radio" name="largePlateSize" id="largePlateWhole" value='Whole' />
                                     <label htmlFor="largePlateWhole">Whole</label>
                                 </div>
                             </fieldset>
@@ -217,31 +217,31 @@ function SelectIngredientsStage({ mealIngredients, editFormData, handleAddingIng
                             <fieldset className="flex">
                                 <legend>Serving visual on a small plate:</legend>
                                 <div>
-                                    <input type="radio" name="smallPlateSize" id="smallPlateEighth" value='eighth' />
+                                    <input type="radio" name="smallPlateSize" id="smallPlateEighth" value='Eighth' />
                                     <label htmlFor="smallPlateEighth">1/8</label>
                                 </div>
                                 <div>
-                                    <input type="radio" name="smallPlateSize" id="smallPlateFourth" value='fourth' />
+                                    <input type="radio" name="smallPlateSize" id="smallPlateFourth" value='Fourth' />
                                     <label htmlFor="smallPlateFourth">1/4</label>
                                 </div>
                                 <div>
-                                    <input type="radio" name="smallPlateSize" id="smallPlateThird" value='third' />
+                                    <input type="radio" name="smallPlateSize" id="smallPlateThird" value='Third' />
                                     <label htmlFor="smallPlateThird">1/3</label>
                                 </div>
                                 <div>
-                                    <input type="radio" name="smallPlateSize" id="smallPlateHalf" value='half' />
+                                    <input type="radio" name="smallPlateSize" id="smallPlateHalf" value='Half' />
                                     <label htmlFor="smallPlateHalf">1/2</label>
                                 </div>
                                 <div>
-                                    <input type="radio" name="smallPlateSize" id="smallPlateTwoThirds" value='twoThirds' />
+                                    <input type="radio" name="smallPlateSize" id="smallPlateTwoThirds" value='TwoThirds' />
                                     <label htmlFor="smallPlateTwoThirds">2/3</label>
                                 </div>
                                 <div>
-                                    <input type="radio" name="smallPlateSize" id="smallPlateThreeFourths" value='threeFourths' />
+                                    <input type="radio" name="smallPlateSize" id="smallPlateThreeFourths" value='ThreeFourths' />
                                     <label htmlFor="smallPlateThreeFourths">3/4</label>
                                 </div>
                                 <div>
-                                    <input type="radio" name="smallPlateSize" id="smallPlateWhole" value='wholePlate' />
+                                    <input type="radio" name="smallPlateSize" id="smallPlateWhole" value='Whole' />
                                     <label htmlFor="smallPlateWhole">Whole</label>
                                 </div>
                             </fieldset>
@@ -249,31 +249,31 @@ function SelectIngredientsStage({ mealIngredients, editFormData, handleAddingIng
                             <fieldset className="flex">
                                 <legend>Serving visual in a bowl:</legend>
                                 <div>
-                                    <input type="radio" name="bowlSize" id="largeBowlEighth" value='eighth' />
+                                    <input type="radio" name="bowlSize" id="largeBowlEighth" value='Eighth' />
                                     <label htmlFor="largeBowlEighth">1/8</label>
                                 </div>
                                 <div>
-                                    <input type="radio" name="bowlSize" id="largeBowlFourth" value='fourth' />
+                                    <input type="radio" name="bowlSize" id="largeBowlFourth" value='Fourth' />
                                     <label htmlFor="largeBowlFourth">1/4</label>
                                 </div>
                                 <div>
-                                    <input type="radio" name="bowlSize" id="largeBowlThird" value='third' />
+                                    <input type="radio" name="bowlSize" id="largeBowlThird" value='Third' />
                                     <label htmlFor="largeBowlThird">1/3</label>
                                 </div>
                                 <div>
-                                    <input type="radio" name="bowlSize" id="largeBowlHalf" value='half' />
+                                    <input type="radio" name="bowlSize" id="largeBowlHalf" value='Half' />
                                     <label htmlFor="largeBowlHalf">1/2</label>
                                 </div>
                                 <div>
-                                    <input type="radio" name="bowlSize" id="largeBowlTwoThirds" value='twoThirds' />
+                                    <input type="radio" name="bowlSize" id="largeBowlTwoThirds" value='TwoThirds' />
                                     <label htmlFor="largeBowlTwoThirds">2/3</label>
                                 </div>
                                 <div>
-                                    <input type="radio" name="bowlSize" id="largeBowlThreeFourths" value='threeFourths' />
+                                    <input type="radio" name="bowlSize" id="largeBowlThreeFourths" value='ThreeFourths' />
                                     <label htmlFor="largeBowlThreeFourths">3/4</label>
                                 </div>
                                 <div>
-                                    <input type="radio" name="bowlSize" id="largeBowlWhole" value='wholeBowl' />
+                                    <input type="radio" name="bowlSize" id="largeBowlWhole" value='Whole' />
                                     <label htmlFor="largeBowlWhole">Whole</label>
                                 </div>
                             </fieldset>

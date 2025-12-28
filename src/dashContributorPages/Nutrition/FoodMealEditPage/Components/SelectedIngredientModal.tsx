@@ -20,6 +20,7 @@ function SelectedIngredientModal({ ingredient, onClose, handleAddingIngredient }
     const [displayMeasuringMethod, setDisplayMeasuringMethod] = useState<boolean>(true)
     const [ingredientToAdd, setIngredientToAdd] = useState<usedIngredient>(
         {
+            id: undefined,
             rawIngredientId: ingredient.id,
             name: ingredient.name, quantityUsed: undefined,
             measuringMethod: undefined,

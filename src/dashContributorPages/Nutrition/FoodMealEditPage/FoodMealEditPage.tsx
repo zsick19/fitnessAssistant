@@ -15,12 +15,14 @@ export interface editFoodMealSubmission {
     description: string | undefined
     mealIngredients: usedIngredient[]
     mostRecentMealCreationStage: number | undefined
+
     totalCalories: number
     totalProtein: number
     totalFoodOutputQuantity: number | undefined
     totalFoodMeasurementUnit: string | undefined
     numberOfServings: number | undefined
     servingSizePerMeasuringUnit: number | undefined
+
     largePlateSize: string | undefined
     smallPlateSize: string | undefined
     bowlSize: string | undefined
@@ -30,6 +32,7 @@ export interface editFoodMealSubmission {
 
 
 export interface usedIngredient {
+    id: string | undefined
     rawIngredientId: string
     name: string
     quantityUsed: number | undefined
@@ -66,7 +69,8 @@ function FoodMealEditPage() {
 
     useEffect(() => {
         if (isSuccess) {
-            setEditFormData({ ...data, totalCalories: 0, totalProtein: 0 })
+            console.log(data)
+            setEditFormData(data)
             setEditFoodMealStage(data.mostRecentMealCreationStage)
         }
     }, [data])
@@ -90,8 +94,10 @@ function FoodMealEditPage() {
 
     function handleAddingIngredient(ingredientToAdd: usedIngredient): void {
         let additionalIngredients = [...editFormData.mealIngredients, ingredientToAdd]
-        console.log(ingredientToAdd)
-        let calories = editFormData.totalCalories + ingredientToAdd.totalCalories
+        additionalIngredients.sort((a, b) => {
+            return a.name.localeCompare(b.name, 'en', { sensitivity: 'base' })
+        })
+        let calories = Math.round(editFormData.totalCalories + ingredientToAdd.totalCalories)
         let protein = editFormData.totalProtein + ingredientToAdd.totalProteinGrams
         setEditFormData({ ...editFormData, mealIngredients: additionalIngredients, totalCalories: calories, totalProtein: protein })
     }
@@ -104,8 +110,10 @@ function FoodMealEditPage() {
     }
 
     function handleUpdatingIngredient(ingredientToUpdate: usedIngredient): void {
+        if (ingredientToUpdate.id) console.log(ingredientToUpdate.id)
+
         var indexOfUpdate = editFormData.mealIngredients.findIndex((t) => t.rawIngredientId === ingredientToUpdate.rawIngredientId)
-        var copyArray = editFormData.mealIngredients
+        var copyArray = [...editFormData.mealIngredients]
         copyArray[indexOfUpdate] = ingredientToUpdate
 
         let calorieResult = 0
@@ -115,8 +123,8 @@ function FoodMealEditPage() {
             proteinResult = proteinResult + ingredient.totalProteinGrams
         })
         setEditFormData(prev => ({ ...prev, mealIngredients: copyArray, totalCalories: calorieResult, totalProtein: proteinResult }))
-    }
 
+    }
 
     function handleFoodOutputChange(event: React.FocusEvent<HTMLFormElement>) {
         setEditFormData({ ...editFormData, [event.target.name]: event.target.value })
@@ -128,8 +136,13 @@ function FoodMealEditPage() {
     async function handleSaveProgress() {
         if (id != undefined) {
             try {
-                const patch = jsonpatch.compare(data, { ...editFormData, mostRecentMealCreationStage: editFoodMealStage })
-                if (patch.length > 0) await updateFoodMeal({ id, patchData: patch }).unwrap()
+                let patch = jsonpatch.compare(data, { ...editFormData, mostRecentMealCreationStage: editFoodMealStage })
+                patch = patch.filter(op => !op.path.startsWith('/mealIngredients'))
+
+                patch.push({ op: 'replace', path: "/mealIngredients", value: editFormData.mealIngredients })
+                console.log(patch)
+
+                if (patch.length > 0) await updateFoodMeal({ id, patchData: patch.reverse() }).unwrap()
 
                 setEditSavedMessage("Saved")
                 setTimeout(() => { setEditSavedMessage(undefined) }, 2000);
